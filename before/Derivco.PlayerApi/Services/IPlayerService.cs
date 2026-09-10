@@ -1,5 +1,6 @@
 namespace Derivco.PlayerApi.Services;
 
+using System.Collections.Generic;
 using Derivco.PlayerApi.Models;
 
 public interface IPlayerService
@@ -8,5 +9,6 @@ public interface IPlayerService
     PlayerDto CreatePlayer(CreatePlayerRequest request);
     PlayerDto? UpdateBalance(int playerId, decimal newBalance);
     IEnumerable<PlayerDto> GetAllPlayers();
+    IEnumerable<TransactionDto> GetPlayerTransactions(int playerId);
     void TransferFunds(TransferFundsRequest request);
 }

@@ -2,7 +2,7 @@ using System;
 
 namespace Derivco.PlayerApi.Models;
 
-public class Transaction
+public class TransactionDto
 {
     public int TransactionId { get; set; }
     public int PlayerId { get; set; }
