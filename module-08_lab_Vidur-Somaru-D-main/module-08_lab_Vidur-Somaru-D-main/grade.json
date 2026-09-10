@@ -1,0 +1,34 @@
+{
+  "name": "Vidur-Somaru-D",
+  "score": 61,
+  "summary": "What was submitted is high quality — the Serilog wiring is correct, and the connection-string work uses AddOptions with Validate and ValidateOnStart, which is the full solution rather than the minimal one. But only tasks 1, 2 and 3b were attempted: there is no transactions endpoint, no new tests, and the container was never run to completion.",
+  "criteria": {
+    "functionality": {
+      "score": 15,
+      "comment": "Tasks 1, 2 and 3b are correct and complete. Task 3c/3d was not done — the healthcheck still points at the stale sqlcmd path, so docker compose up --build could never have brought the API up. Task 4 is absent entirely; the test suite is unchanged at 18/18."
+    },
+    "approach": {
+      "score": 19,
+      "comment": "The concepts used are right and go beyond the minimum: ValidateOnStart with a message naming the variable, ReadFrom.Services, FromLogContext, and stdout-only sinks with the container reasoning stated. Nothing to assess for task 4."
+    },
+    "code_quality": {
+      "score": 20,
+      "comment": "Consistent CHANGE: prefixes on every edit make the diff easy to review, and the comments explain intent rather than restating the code. Small blemishes: several files lost their trailing newline, and _Comment keys were added to appsettings.json where a real JSON comment or a README note would serve better."
+    },
+    "completeness": {
+      "score": 7,
+      "comment": "Two and a half of four tasks. No transactions endpoint, no tests, no verification that the container stack comes up. This is the main driver of the score."
+    }
+  },
+  "strengths": [
+    "ValidateOnStart with a clear message — the full task 2 solution, which most of the cohort skipped",
+    "Consistent CHANGE: comment convention that makes every edit self-describing in a diff",
+    "Correct Serilog wiring including UseSerilogRequestLogging, which is what actually satisfies 'every request produces a log entry'"
+  ],
+  "improvements": [
+    "Tasks 3c/3d and task 4 were not attempted — the transactions endpoint, its tests, and running the container stack are the bulk of the missing marks",
+    "Even without AI assistance, the endpoint and its tests are ordinary hand-written work; please arrange to complete them"
+  ],
+  "flag_for_review": true,
+  "flag_reason": "Part 4 (the AI-assisted endpoint) was not attempted, reportedly because this student's manager does not permit them to use AI tooling. That restriction is contrary to Derivco standards, which expect developers to use AI assistance under review — and it is the manager's position, not the student's, that needs addressing. Note also that tasks 3c/3d were not completed either, which is unrelated to the AI restriction. The work that was submitted is of good quality."
+}
