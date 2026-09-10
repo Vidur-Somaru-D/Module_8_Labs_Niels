@@ -1,0 +1,47 @@
+# Two services: the SQL Server you already know from Module 6, and the API
+# built from the Dockerfile in this folder.
+#
+# Tasks 1 and 2 only need the database:
+#   docker compose up -d sqlserver
+#
+# Task 3 brings up both:
+#   docker compose up --build
+
+services:
+  sqlserver:
+    image: mcr.microsoft.com/mssql/server:2019-latest
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "Derivco@Training1"
+      MSSQL_PID: "Developer"
+    ports:
+      - "1433:1433"
+    volumes:
+      - sqlserver_data:/var/opt/mssql
+      - ./database:/scripts          # schema.sql and seed-data.sql are available inside the container at /scripts
+    healthcheck:
+      test: ["CMD", "/opt/mssql-tools/bin/sqlcmd", "-S", "localhost", "-U", "sa", "-P", "Derivco@Training1", "-C", "-Q", "SELECT 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"                  # host:container — the app listens on 8080 inside
+    environment:
+      # This is the container-runtime equivalent of a Kubernetes ConfigMap/Secret:
+      # the image ships inert, and the environment supplies the value at start-up.
+      # Note the host is `sqlserver` — the compose service name, not localhost.
+      # Inside the compose network each service is reachable by its service name.
+      Database__ConnectionString: "Server=sqlserver,1433;Database=DerivcoTraining;User Id=sa;Password=Derivco@Training1;TrustServerCertificate=True;"
+      ASPNETCORE_ENVIRONMENT: "Production"
+    depends_on:
+      sqlserver:
+        condition: service_healthy
+
+volumes:
+  sqlserver_data:
