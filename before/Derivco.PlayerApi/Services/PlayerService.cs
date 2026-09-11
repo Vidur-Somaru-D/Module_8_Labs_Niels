@@ -46,6 +46,8 @@ public class PlayerService : IPlayerService
 
     public IReadOnlyCollection<TransactionDto>? GetPlayerTransactions(int playerId)
     {
+        var player = _repository.GetById(playerId);
+        if (player is null) return null;
         var transactions = _repository.GetTransactionsByPlayer(playerId);
         if (transactions is null) return null;
         return transactions.Select(t => new TransactionDto

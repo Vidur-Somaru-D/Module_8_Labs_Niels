@@ -112,8 +112,4 @@ public class PlayersController : ControllerBase
         return Ok(new { commandTimeoutSeconds = _dbOptions.CommandTimeoutSeconds });
     }
 
-    public object GetTransactions(int v)
-    {
-        throw new NotImplementedException();
-    }
 }
