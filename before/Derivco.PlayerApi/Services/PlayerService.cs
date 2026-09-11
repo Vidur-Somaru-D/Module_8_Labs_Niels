@@ -1,5 +1,6 @@
 namespace Derivco.PlayerApi.Services;
 
+using System.Collections.Generic;
 using Derivco.PlayerApi.Models;
 using Derivco.PlayerApi.Repositories;
 
@@ -43,6 +44,20 @@ public class PlayerService : IPlayerService
         return _repository.GetAll().Select(MapToDto);
     }
 
+    public IReadOnlyCollection<TransactionDto>? GetPlayerTransactions(int playerId)
+    {
+        var transactions = _repository.GetTransactionsByPlayer(playerId);
+        if (transactions is null) return null;
+        return transactions.Select(t => new TransactionDto
+        {
+            TransactionId = t.TransactionId,
+            PlayerId = t.PlayerId,
+            Amount = t.Amount,
+            TransactionType = t.TransactionType,
+            CreatedAt = t.CreatedAt
+        }).ToList().AsReadOnly();
+    }
+
     public void TransferFunds(TransferFundsRequest request)
     {
         // Pre-flight existence checks give friendly 404s before touching the transaction.
@@ -65,4 +80,17 @@ public class PlayerService : IPlayerService
         Balance = player.Balance,
         Region = player.Region,
     };
-}
+    // This is a helper method to map a Transaction entity to a TransactionDto.
+    private static TransactionDto MapToDto(Transaction transaction) => new()
+    {
+        TransactionId = transaction.TransactionId,
+        PlayerId = transaction.PlayerId,
+        Amount = transaction.Amount,
+        TransactionType = transaction.TransactionType,
+        CreatedAt = transaction.CreatedAt
+    };
+    
+    }
+
+
+

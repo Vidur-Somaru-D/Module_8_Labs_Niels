@@ -5,6 +5,9 @@ using Microsoft.Extensions.Options;
 using Derivco.PlayerApi.Models;
 using Derivco.PlayerApi.Options;
 using Derivco.PlayerApi.Services;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using System;
 
 [ApiController]
 [Route("api/[controller]")]
@@ -62,7 +65,19 @@ public class PlayersController : ControllerBase
             return NotFound();
         return Ok(updated);
     }
-
+    // GET api/players/{id}/transactions
+    // Returns all transactions for a player, or 404 if the player does not exist.
+    [HttpGet("{id:int}/transactions")]
+    [ProducesResponseType(typeof(IEnumerable<TransactionDto>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public IActionResult GetPlayerTransactions(int id)
+    {
+        var transactions = _playerService.GetPlayerTransactions(id);
+        if (transactions is null)
+            return NotFound();
+        return Ok(transactions);
+    }
+    
     // POST api/players/{fromId}/transfer
     [HttpPost("{fromId:int}/transfer")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]

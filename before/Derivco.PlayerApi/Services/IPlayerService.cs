@@ -9,6 +9,6 @@ public interface IPlayerService
     PlayerDto CreatePlayer(CreatePlayerRequest request);
     PlayerDto? UpdateBalance(int playerId, decimal newBalance);
     IEnumerable<PlayerDto> GetAllPlayers();
-    IEnumerable<TransactionDto> GetPlayerTransactions(int playerId);
+    IReadOnlyCollection<TransactionDto>? GetPlayerTransactions(int playerId);
     void TransferFunds(TransferFundsRequest request);
 }
